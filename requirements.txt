@@ -1,0 +1,12 @@
+xxhash
+wheel
+twilio
+pyyaml
+flask
+gunicorn
+pyrebase
+pytest
+pytz
+plan
+textblob
+plotly
