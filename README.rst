@@ -5,7 +5,7 @@ ping-app
 About
 -----
 
-This application is responsible for delivering SMS questions to participants in order to challenge
+This application is responsible for delivering SMS questions to participants in order to replicate and extend
 `Wandering Mind Is an Unhappy Mind
 <http://science.sciencemag.org/content/330/6006/932>`_.
 
