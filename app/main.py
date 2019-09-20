@@ -43,7 +43,10 @@ def create_app():
         response_question = user.last_question  # question that participant was asked
         question = get_next_question(response_question)
 
-        db.add_response(user, response_question, message_body, timestamp)
+        if message_body.strip() == "EXIT":
+            db.add_response(user, response_question, message_body, timestamp, stop=True)
+        else:
+            db.add_response(user, response_question, message_body, timestamp)
 
         if question != "done":
             user.last_question = question

@@ -131,6 +131,8 @@ def send_all_messages():
         return
 
     for user in db.get_all_users():
+        if user.stop:
+            continue
         if user.finished:
             continue
         elif user.is_paused:  # if paused see if we can unset the pause

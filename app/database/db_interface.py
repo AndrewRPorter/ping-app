@@ -77,7 +77,7 @@ class DBInterface:
         db.child("participants").child(hash_id).set(user_data)
 
     @classmethod
-    def add_response(self, user, question, response, timestamp):
+    def add_response(self, user, question, response, timestamp, stop=False):
         """Updates responses in firebase"""
         hash_id = xxhash.xxh64(user.id, seed=27).hexdigest()
 
@@ -100,12 +100,14 @@ class DBInterface:
                 "response": response,
                 "questionTimestamp": user.last_question_time,
                 "responseTimestamp": timestamp,
+                "stop": stop
             }
         else:
             data[f"D{day}_{time_interval}_B_{question_number}"] = {
                 "response": response,
                 "questionTimestamp": user.last_question_time,
                 "responseTimestamp": timestamp,
+                "stop": stop
             }
 
         db.child("responses").child(hash_id).set(data)

@@ -18,6 +18,7 @@ class User:
         self.waiting = data["waiting"]
         self.finished = data["finished"]
         self.reset = data["reset"]
+        self.stop = data["stop"]
 
     def to_dict(self):
         """Returns a dictionary representation of user data for easy storage"""
@@ -39,6 +40,7 @@ class User:
             "waiting": self.waiting,
             "finished": self.finished,
             "reset": self.reset,
+            "stop": self.stop
         }
 
     def __repr__(self):
