@@ -37,7 +37,7 @@ def create_app():
         if user is None:  # prevent against double responses
             return ""
 
-        if user.finished:
+        if user.finished or user.stop:
             return ""
 
         response_question = user.last_question  # question that participant was asked
