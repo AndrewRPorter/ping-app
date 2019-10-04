@@ -45,8 +45,8 @@ def create_app():
 
         if message_body.strip() == "EXIT":
             db.add_response(user, response_question, message_body, timestamp, stop=True)
-        else:
-            db.add_response(user, response_question, message_body, timestamp)
+            return ""
+        db.add_response(user, response_question, message_body, timestamp)
 
         if question != "done":
             user.last_question = question
