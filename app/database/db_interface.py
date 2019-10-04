@@ -96,19 +96,21 @@ class DBInterface:
 
         time_interval = user.current_interval
 
+        if stop == True:
+            user.stop = True
+            DBInterface.update_user(user)
+
         if not user.cycleB:
             data[f"D{day}_{time_interval}_A_{question_number}"] = {
                 "response": response,
                 "questionTimestamp": user.last_question_time,
                 "responseTimestamp": timestamp,
-                "stop": stop
             }
         else:
             data[f"D{day}_{time_interval}_B_{question_number}"] = {
                 "response": response,
                 "questionTimestamp": user.last_question_time,
                 "responseTimestamp": timestamp,
-                "stop": stop
             }
 
         db.child("responses").child(hash_id).set(data)
