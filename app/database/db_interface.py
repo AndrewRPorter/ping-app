@@ -32,7 +32,7 @@ db = firebase.database()
 
 class DBInterface:
     @classmethod
-    def create_user(self, data):
+    def create_user(cls, data):
         """Creates new user model from initial CSV data"""
 
         data = {
@@ -53,6 +53,7 @@ class DBInterface:
             "waiting": False,
             "finished": False,
             "reset": False,
+            "stop": False
         }
 
         hash_id = xxhash.xxh64(data["userID"], seed=27).hexdigest()
@@ -70,14 +71,14 @@ class DBInterface:
         return {"user": user_obj}
 
     @classmethod
-    def update_user(self, user):
+    def update_user(cls, user):
         """Updates user information in firebase"""
         hash_id = xxhash.xxh64(user.id, seed=27).hexdigest()
         user_data = user.to_dict()
         db.child("participants").child(hash_id).set(user_data)
 
     @classmethod
-    def add_response(self, user, question, response, timestamp, stop=False):
+    def add_response(cls, user, question, response, timestamp, stop=False):
         """Updates responses in firebase"""
         hash_id = xxhash.xxh64(user.id, seed=27).hexdigest()
 
@@ -113,7 +114,7 @@ class DBInterface:
         db.child("responses").child(hash_id).set(data)
 
     @classmethod
-    def get_user(self, number):
+    def get_user(cls, number):
         """Returns user object from database by matching phone numbers"""
 
         all_users = DBInterface.get_all_users()
@@ -125,7 +126,7 @@ class DBInterface:
         return None
 
     @classmethod
-    def get_all_users(self):
+    def get_all_users(cls):
         """Returns all user objects from the database in a list"""
         try:
             all_user_data = dict(db.child("participants").get().val())
@@ -135,7 +136,7 @@ class DBInterface:
         return [User(key, value) for key, value in all_user_data.items()]
 
     @classmethod
-    def get_user_responses(self, key):
+    def get_user_responses(cls, key):
         """Query specific user responses"""
         all_data = DBInterface.get_all_responses()
 
@@ -144,7 +145,7 @@ class DBInterface:
         return {}
 
     @classmethod
-    def get_all_responses(self):
+    def get_all_responses(cls):
         """Query all responses from the table"""
         try:
             all_response_data = dict(db.child("responses").get().val())

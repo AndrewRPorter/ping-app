@@ -66,7 +66,7 @@ def send_message(user, question):
     """
     Handles user response messages for each cycle
     """
-    client.messages.create(to=user.phone_number, from_="+19783869580", body=question)
+    client.messages.create(to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question)
 
 
 def send_initial_message(user):
@@ -77,7 +77,7 @@ def send_initial_message(user):
     """
 
     if time_helper.get_time_interval() is None:  # if not between 9:00AM and 9:00PM
-        return ""
+        return
 
     current_time = time.time()  # grab current time
 
@@ -126,9 +126,6 @@ def send_all_messages():
     """
 
     current_time = time.time()
-
-    if time_helper.get_time_interval() is None:  # if not between 9:00AM and 9:00PM
-        return
 
     for user in db.get_all_users():
         if user.stop:
@@ -216,8 +213,6 @@ def get_next_question(last_question):
         question = QUESTIONS["questions"]["three"]
     elif last_question == QUESTIONS["questions"]["three"]:
         question = QUESTIONS["questions"]["four"]
-    elif last_question == QUESTIONS["questions"]["four"]:
-        question = QUESTIONS["questions"]["five"]
     else:
         question = "done"  # denotes end of current cycle
 
@@ -226,4 +221,5 @@ def get_next_question(last_question):
 
 if __name__ == "__main__":
     initialize()  # start the client processes
+    send_initial_message(db.get_all_users()[0])
     send_all_messages()

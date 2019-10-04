@@ -1,6 +1,5 @@
 questions:
-  one: "How are you feeling right now in terms of valence (negative to positive)? Answer on a scale from; 1 (very negative) to 9 (very positive)."
-  two: "How are you feeling right now in terms of arousal (calm to active)? Answer on a scale from; 1 (very calm) to 9 (very active)."
-  three: "Are you thinking about something other than what are you currently doing? Answer on a scale from; 1 (not at all) to 9 (very much so)."
-  four: "Are your thoughts wandering around freely? Answer on a scale from; 1 (not at all) to 9 (very much so)."
-  five: "What are you currently doing?"
+  one: "How are you feeling right now in terms of valence (negative to positive)? Answer on a scale from; 1 (very negative) to 7 (very positive)."
+  two: "How are you feeling right now in terms of arousal (calm to active)? Answer on a scale from; 1 (very calm) to 7 (very active)."
+  three: "Are you thinking about something other than what you are currently doing? Answer on a scale to 1 (completely on task) to 7 (completely off-task)."
+  four: "Are your thoughts wandering around freely? Answer on a scale from; 1 (not at all) to 7 (very much so)."
