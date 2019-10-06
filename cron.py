@@ -96,7 +96,7 @@ def send_initial_message(user):
             user.last_question_time = str(datetime.now(tz))
 
             client.messages.create(
-                to=user.phone_number, from_="+19783869580", body=question
+                to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
             )
     elif user.cycleA and not user.cycleB:
         # need to check time since last cycle here (8-12 minutes)
@@ -114,7 +114,7 @@ def send_initial_message(user):
             user.last_question_time = str(datetime.now(tz))
 
             client.messages.create(
-                to=user.phone_number, from_="+19783869580", body=question
+                to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
             )
 
     db.update_user(user)  # send updated user object to the DB
