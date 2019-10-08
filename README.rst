@@ -17,7 +17,7 @@ Usage
 -----
 
 Partiicpants need to be added to the file `data/participants.csv`
-Each participant needs a unique ID, first name, last name and phone number of the following format: +1XXXXXXXXXX
+Each participant needs a unique ID, first name, last name and phone number of the following format: [+] [country code] [subscriber number including area code]
 
 The application can be spawned via cron jobs. Start by calling `python3 schedule.py`
 

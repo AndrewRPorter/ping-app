@@ -127,6 +127,9 @@ def send_all_messages():
 
     current_time = time.time()
 
+    if time_helper.get_time_interval() is None:  # if not between 9:00AM and 9:00PM
+        return
+
     for user in db.get_all_users():
         if user.stop:
             continue
