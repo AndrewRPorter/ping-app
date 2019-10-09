@@ -75,10 +75,8 @@ def send_initial_message(user):
 
     This is responsbile for starting new user cycles
     """
-
     if time_helper.get_time_interval() is None:  # if not between 9:00AM and 9:00PM
         return
-
     current_time = time.time()  # grab current time
 
     # check to see if a user cycle has begun yet, if not start cycleA
@@ -94,7 +92,6 @@ def send_initial_message(user):
 
             user.last_question = question
             user.last_question_time = str(datetime.now(tz))
-
             client.messages.create(
                 to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
             )
@@ -224,5 +221,6 @@ def get_next_question(last_question):
 
 if __name__ == "__main__":
     initialize()  # start the client processes
-    send_initial_message(db.get_all_users()[0])
+    for user in db.get_all_users():
+        send_initial_message(user)
     send_all_messages()

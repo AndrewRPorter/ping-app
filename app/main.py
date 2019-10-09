@@ -32,6 +32,13 @@ def create_app():
         number = request.form["From"]
         message_body = request.form["Body"]
         timestamp = str(datetime.now(tz))
+
+        # return the number back to the accepted twilio format with spaces
+        county_code = number[1:2]
+        area_code = number[2:5]
+        rest = number[5:]
+        number = f"+ {county_code} {area_code} {rest}"
+
         user = db.get_user(number)
 
         if user is None:  # prevent against double responses
