@@ -95,7 +95,7 @@ def send_initial_message(user):
             client.messages.create(
                 to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
             )
-    elif user.cycleA and not user.cycleB:
+    elif not user.waiting and user.cycleA and not user.cycleB:
         # need to check time since last cycle here (8-12 minutes)
 
         if not user.next_cycle_time == 0 and (
@@ -222,5 +222,11 @@ def get_next_question(last_question):
 if __name__ == "__main__":
     initialize()  # start the client processes
     for user in db.get_all_users():
-        send_initial_message(user)
-    send_all_messages()
+        try:
+            send_initial_message(user)
+        except Exception:
+            continue
+    try:
+        send_all_messages()
+    except Exception:
+        pass
