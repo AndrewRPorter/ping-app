@@ -104,9 +104,6 @@ def send_all_messages():
 
     current_time = time.time()
 
-    if time_helper.get_time_interval() is None:  # if not between 9:00AM and 9:00PM
-        return
-
     for user in db.get_all_users():
         if user.stop:
             continue
@@ -133,7 +130,6 @@ def send_all_messages():
                     user.current_interval = time_helper.get_time_interval()
                     user.is_paused = False
                     user.last_question = ""  # reset the last question asked to create a new cycle of questions
-                    # user.last_cycle_time = current_time  # reset the cycle clock
                     user.cycleA, user.cycleB = (False, False)  # reset both cycles for new time
                     user.next_cycle_time = random.randint(0, 240) * 60
                     user.last_cycle_time = time.time()
@@ -141,6 +137,7 @@ def send_all_messages():
                 continue
 
             if (current_time - user.last_interval_time) > 7200:  # check that AT LEAST 2 hours has passed by
+                user.current_interval = time_helper.get_time_interval()
                 user.is_paused = False
                 user.last_question = ""  # reset the last question asked to create a new cycle of questions
                 user.last_cycle_time = time.time()
@@ -149,7 +146,6 @@ def send_all_messages():
                 if (user.next_cycle_time + 7200) > 14400:  # if more than 4 hours have passed
                     user.next_cycle_time = random.randint(0, 120) * 60
 
-                # user.last_cycle_time = current_time  # reset the cycle clock
                 user.cycleA, user.cycleB = (False, False)  # reset both cycles for new time points
                 db.update_user(user)  # send updated user object to the DB
         else:

@@ -90,7 +90,7 @@ class DBInterface:
 
         time_interval = user.current_interval
 
-        if stop == True:
+        if stop:
             user.stop = True
             DBInterface.update_user(user)
 
