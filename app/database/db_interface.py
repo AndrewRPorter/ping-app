@@ -13,9 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # change CONFIG file location based on where the program is being run
 CONFIG_NAME = "../config.yml"
-CONFIG = yaml.safe_load(
-    open(os.path.join(BASE_DIR, CONFIG_NAME))
-)  # load in configuration data
+CONFIG = yaml.safe_load(open(os.path.join(BASE_DIR, CONFIG_NAME)))  # load in configuration data
 
 firebase_conf = {
     "apiKey": CONFIG["firebase"]["API_KEY"],
@@ -53,7 +51,7 @@ class DBInterface:
             "waiting": False,
             "finished": False,
             "reset": False,
-            "stop": False
+            "stop": False,
         }
 
         hash_id = xxhash.xxh64(data["userID"], seed=27).hexdigest()
@@ -61,9 +59,7 @@ class DBInterface:
         user_obj = User(hash_id, data)
 
         # check if user already exists
-        if user_obj.phone_number in [
-            user.phone_number for user in DBInterface.get_all_users()
-        ]:
+        if user_obj.phone_number in [user.phone_number for user in DBInterface.get_all_users()]:
             return {"user": DBInterface.get_user(user_obj.phone_number)}
 
         db.child("participants").child(hash_id).set(data)
@@ -90,9 +86,7 @@ class DBInterface:
         question_number = question_data.get_question_number(question)
         current_time = time.time()
 
-        day = (
-            int((current_time - user.start_time) / 86400) + 1
-        )  # note that 86400 is seconds in a day
+        day = int((current_time - user.start_time) / 86400) + 1  # note that 86400 is seconds in a day
 
         time_interval = user.current_interval
 

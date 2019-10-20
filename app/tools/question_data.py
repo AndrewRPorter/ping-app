@@ -5,9 +5,7 @@ import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 QUESTIONS_NAME = "../data/questions.yml"
-QUESTIONS = yaml.safe_load(
-    open(os.path.join(BASE_DIR, QUESTIONS_NAME))
-)  # load in configuration data
+QUESTIONS = yaml.safe_load(open(os.path.join(BASE_DIR, QUESTIONS_NAME)))  # load in configuration data
 
 
 def get_question_number(question_text):

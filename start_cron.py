@@ -18,9 +18,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.start:
-        os.system(
-            f"python3 {SCRIPT_NAME_PATH}  --init"
-        )  # call the command first and then call every 1.minutes
+        os.system(f"python3 {SCRIPT_NAME_PATH}  --init")  # call the command first and then call every 1.minutes
         cron.run("write")
     elif args.end:
         cron.run("clear")

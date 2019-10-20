@@ -15,14 +15,10 @@ from app.tools import time_helper
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CONFIG_NAME = "ping-app/config.yml"
-CONFIG = yaml.safe_load(
-    open(os.path.join(BASE_DIR, CONFIG_NAME))
-)  # load in configuration data
+CONFIG = yaml.safe_load(open(os.path.join(BASE_DIR, CONFIG_NAME)))  # load in configuration data
 
 QUESTIONS_NAME = "ping-app/data/questions.yml"
-QUESTIONS = yaml.safe_load(
-    open(os.path.join(BASE_DIR, QUESTIONS_NAME))
-)  # load in configuration data
+QUESTIONS = yaml.safe_load(open(os.path.join(BASE_DIR, QUESTIONS_NAME)))  # load in configuration data
 
 account_sid = CONFIG["twilio"]["ACCOUNT_SID"]
 auth_token = CONFIG["twilio"]["AUTH_TOKEN"]
@@ -38,9 +34,7 @@ def initialize():
     # create participant CSV if not already exists
     if not os.path.isfile(_participant_file):
         with open(_participant_file, "w") as f:
-            writer = csv.writer(
-                f, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL
-            )
+            writer = csv.writer(f, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
             writer.writerow(["ID", "First Name", "Last Name", "Number"])
 
     # from here we want to add all users to the firebase table if not already in there
@@ -54,12 +48,7 @@ def initialize():
                 i += 1
                 continue  # skip over column names
 
-            data = {
-                "userID": row[0],
-                "firstName": row[1],
-                "lastName": row[2],
-                "phoneNumber": row[3],
-            }
+            data = {"userID": row[0], "firstName": row[1], "lastName": row[2], "phoneNumber": row[3]}
             db.create_user(data)
 
 
@@ -83,9 +72,7 @@ def send_initial_message(user):
     # check to see if a user cycle has begun yet, if not start cycleA
     if not user.cycleA and not user.cycleB:
         if (current_time - user.last_cycle_time) > user.next_cycle_time:
-            user.current_interval = (
-                time_helper.get_time_interval()
-            )  # only update user time intervals in cycleA
+            user.current_interval = time_helper.get_time_interval()  # only update user time intervals in cycleA
 
             user.waiting = True
             user.cycleA = True  # cycle A has now been started
@@ -93,27 +80,19 @@ def send_initial_message(user):
 
             user.last_question = question
             user.last_question_time = str(datetime.now(tz))
-            client.messages.create(
-                to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
-            )
+            client.messages.create(to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question)
     elif not user.waiting and user.cycleA and not user.cycleB:
         # need to check time since last cycle here (8-12 minutes)
 
-        if not user.next_cycle_time == 0 and (
-            (current_time - user.last_cycle_time) > user.next_cycle_time
-        ):
+        if not user.next_cycle_time == 0 and ((current_time - user.last_cycle_time) > user.next_cycle_time):
             user.waiting = True
             user.cycleB = True  # cycle B has now been started
-            question = QUESTIONS["questions"][
-                "one"
-            ]  # reset last question for current cycle
+            question = QUESTIONS["questions"]["one"]  # reset last question for current cycle
 
             user.last_question = question
             user.last_question_time = str(datetime.now(tz))
 
-            client.messages.create(
-                to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question
-            )
+            client.messages.create(to=user.phone_number, from_=CONFIG["twilio"]["NUMBER"], body=question)
 
     db.update_user(user)  # send updated user object to the DB
 
@@ -139,9 +118,7 @@ def send_all_messages():
                 continue
 
             # check and see if 5 days have past, this is a hard stop for the time being
-            day = (
-                int((current_time - user.start_time) / 86400) + 1
-            )  # note that 86400 is seconds in a day
+            day = int((current_time - user.start_time) / 86400) + 1  # note that 86400 is seconds in a day
             if day == 5 and user.current_interval == "T3" and user.cycleA and user.cycleB:
                 user.finished = True
                 db.update_user(user)  # send updated user object to the DB
@@ -155,39 +132,25 @@ def send_all_messages():
                 if time_helper.get_time_interval() == "T1":
                     user.current_interval = time_helper.get_time_interval()
                     user.is_paused = False
-                    user.last_question = (
-                        ""
-                    )  # reset the last question asked to create a new cycle of questions
+                    user.last_question = ""  # reset the last question asked to create a new cycle of questions
                     # user.last_cycle_time = current_time  # reset the cycle clock
-                    user.cycleA, user.cycleB = (
-                        False,
-                        False,
-                    )  # reset both cycles for new time
+                    user.cycleA, user.cycleB = (False, False)  # reset both cycles for new time
                     user.next_cycle_time = random.randint(0, 240) * 60
                     user.last_cycle_time = time.time()
                     db.update_user(user)
                 continue
 
-            if (
-                current_time - user.last_interval_time
-            ) > 7200:  # check that AT LEAST 2 hours has passed by
+            if (current_time - user.last_interval_time) > 7200:  # check that AT LEAST 2 hours has passed by
                 user.is_paused = False
-                user.last_question = (
-                    ""
-                )  # reset the last question asked to create a new cycle of questions
+                user.last_question = ""  # reset the last question asked to create a new cycle of questions
                 user.last_cycle_time = time.time()
                 user.next_cycle_time = random.randint(0, 240) * 60
 
-                if (
-                    user.next_cycle_time + 7200
-                ) > 14400:  # if more than 4 hours have passed
+                if (user.next_cycle_time + 7200) > 14400:  # if more than 4 hours have passed
                     user.next_cycle_time = random.randint(0, 120) * 60
 
                 # user.last_cycle_time = current_time  # reset the cycle clock
-                user.cycleA, user.cycleB = (
-                    False,
-                    False,
-                )  # reset both cycles for new time points
+                user.cycleA, user.cycleB = (False, False)  # reset both cycles for new time points
                 db.update_user(user)  # send updated user object to the DB
         else:
             # if user is not currently in a cycle, initiate a new one

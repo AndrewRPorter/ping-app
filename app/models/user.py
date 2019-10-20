@@ -40,7 +40,7 @@ class User:
             "waiting": self.waiting,
             "finished": self.finished,
             "reset": self.reset,
-            "stop": self.stop
+            "stop": self.stop,
         }
 
     def __repr__(self):
