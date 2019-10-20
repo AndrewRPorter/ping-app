@@ -1,3 +1,4 @@
+import argparse
 import csv
 import os
 import random
@@ -196,7 +197,10 @@ def send_all_messages():
                     user.reset = False
                     user.next_cycle_time = random.randint(0, 240) * 60
                     db.update_user(user)
-                send_initial_message(user)
+                try:
+                    send_initial_message(user)
+                except Exception:
+                    continue
 
 
 def get_next_question(last_question):
@@ -220,13 +224,19 @@ def get_next_question(last_question):
 
 
 if __name__ == "__main__":
-    initialize()  # start the client processes
-    for user in db.get_all_users():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--init", action="store_true")
+    args = parser.parse_args()
+
+    if args.init:
+        initialize()  # start the client processes
+    else:
+        for user in db.get_all_users():
+            try:
+                send_initial_message(user)
+            except Exception:
+                continue
         try:
-            send_initial_message(user)
+            send_all_messages()
         except Exception:
-            continue
-    try:
-        send_all_messages()
-    except Exception:
-        pass
+            pass

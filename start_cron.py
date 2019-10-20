@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     if args.start:
         os.system(
-            f"python3 {SCRIPT_NAME_PATH}"
+            f"python3 {SCRIPT_NAME_PATH}  --init"
         )  # call the command first and then call every 1.minutes
         cron.run("write")
     elif args.end:
